@@ -316,7 +316,6 @@ curso Curso_Altas() {
     do {
         printf("Ingresa la fecha con el formato M-D-YYYY o MM-DD-YYYY: ");
         std::cin.getline(temp_fecha, 15, '\n');
-        printf("[%s]", temp_fecha);
     } while (!validarFecha(temp_fecha));//si la fecha se introdujo en el formato especifico avanza y devuelve true
     strcpy(Curso_impartido.ultima_fecha, temp_fecha);
 
@@ -331,8 +330,6 @@ curso Curso_Altas() {
         temp_int_duracion = atoi(temp_duracion);
     } while (!validar_Duracion(temp_int_duracion));
     Curso_impartido.duracion = temp_int_duracion;
-    printf("duracion %d", Curso_impartido.duracion);
-
     do {
         printf("Ingresa el costo : $");
         std::cin.getline(temporal_costo, 15, '\n');
@@ -378,7 +375,7 @@ void mostrarCurso() {
         fflush(stdout);
         usleep(100000);
     }
-
+    fflush(stdin);
     getchar();
 }
 
@@ -410,8 +407,6 @@ bool EsUnNumero(const char *cadena) {
     for (; *cadena; ++cadena) {
         // En cuanto un caracter no sea numérico
         if (std::isdigit(*cadena))
-
-            //return false;
             respuesta = true;
     }
 
@@ -444,8 +439,9 @@ bool verificar_clave_Unica(int clave){
             }
             fread(&AuxiliarCursos,sizeof(curso),1,Lectura_archivo_Cursos);
         }
+        fclose(Lectura_archivo_Cursos);
     }
-    fclose(Lectura_archivo_Cursos);
+
 return registro_repetido;
 }
 ///////////////////fin cursos ///////////////////////
