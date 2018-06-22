@@ -1,0 +1,3 @@
+/home/xazak/Documentos/proyectoGerardo/Project-organizacionArchivos/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/xazak/Documentos/proyectoGerardo/Project-organizacionArchivos/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/xazak/Documentos/proyectoGerardo/Project-organizacionArchivos/cmake-build-debug/CMakeFiles/Project-organizacionArchivos.dir

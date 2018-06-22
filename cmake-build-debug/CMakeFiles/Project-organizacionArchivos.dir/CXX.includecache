@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/xazak/Documentos/proyectoGerardo/Project-organizacionArchivos/main.cpp
+iostream
+-
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+regex
+-
+string
+-
+unistd.h
+-
+
+/home/xazak/Documentos/proyectoGerardo/Project-organizacionArchivos/testArchivos.cpp
+iostream
+-
+stdio.h
+-
+

@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/Project-organizacionArchivos.dir/main.cpp.o CMakeFiles/Project-organizacionArchivos.dir/testArchivos.cpp.o  -o Project-organizacionArchivos 
