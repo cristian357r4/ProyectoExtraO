@@ -11,17 +11,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e15d0014-2ab8-47ff-97af-36b573387b42" name="Default" comment="fclose intentaba cerrar el archivo aun cuando no se podia abrir.&#10;- Problema que impedia compilar en consola solucionado">
-      <change afterPath="$PROJECT_DIR$/Cursos.dat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Project-organizacionArchivos.dir/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Project-organizacionArchivos.dir/main.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Cursos.dat" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Cursos.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Project-organizacionArchivos" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Project-organizacionArchivos" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/bitacoraEjecucion.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/bitacoraEjecucion.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test" beforeDir="false" afterPath="$PROJECT_DIR$/test" afterDir="false" />
-    </list>
+    <list default="true" id="e15d0014-2ab8-47ff-97af-36b573387b42" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -36,8 +26,8 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="23">
-              <caret line="395" column="37" lean-forward="true" selection-start-line="395" selection-start-column="37" selection-end-line="395" selection-end-column="37" />
+            <state relative-caret-position="161">
+              <caret line="401" column="1" lean-forward="true" selection-start-line="401" selection-start-column="1" selection-end-line="401" selection-end-column="1" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -158,23 +148,32 @@
       <updated>1529651804910</updated>
       <workItem from="1529651807287" duration="376000" />
       <workItem from="1529652437172" duration="151000" />
-      <workItem from="1529652718452" duration="1847000" />
+      <workItem from="1529652718452" duration="1950000" />
     </task>
+    <task id="LOCAL-00001" summary="fclose intentaba cerrar el archivo aun cuando no se podia abrir.&#10;- Problema que impedia compilar en consola solucionado">
+      <created>1529654587396</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1529654587396</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2374000" />
+    <option name="totallyTimeSpent" value="2477000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="25" width="1440" height="830" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21947777" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3296837" />
-      <window_info active="true" anchor="bottom" id="Messages" order="9" visible="true" weight="0.32844576" />
+      <window_info anchor="bottom" id="Messages" order="9" weight="0.32844576" />
       <window_info anchor="bottom" id="CMake" order="11" weight="0.32991204" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5010586" side_tool="true" weight="0.32603407" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32844576" />
-      <window_info anchor="bottom" id="Version Control" order="7" weight="0.3296837" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="7" visible="true" weight="0.32844576" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49894142" weight="0.3841642" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.398827" />
@@ -232,8 +231,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="23">
-          <caret line="395" column="37" lean-forward="true" selection-start-line="395" selection-start-column="37" selection-end-line="395" selection-end-column="37" />
+        <state relative-caret-position="161">
+          <caret line="401" column="1" lean-forward="true" selection-start-line="401" selection-start-column="1" selection-end-line="401" selection-end-column="1" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
