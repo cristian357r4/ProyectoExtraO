@@ -34,11 +34,8 @@ void insertar(ABB &arbol, string x, string p){    //bloque que hace un recorrido
      else{
           if(x < arbol->palab){
                insertar(arbol->izq, x, p);
-          }
-          else{
-               if(x > arbol->palab){
+          } else if (x > arbol->palab){
                     insertar(arbol->der, x, p);
-               }
           }
      }
 }
@@ -274,10 +271,10 @@ bool eliminar(ABB &arbol, string palabra){
      }
      return true;
 }// funcion encargada de devolver el nodo reemplazo
-int main()
-{
+ABB arbol = NULL;
+int main(){
     system("color F0");
-    ABB arbol = NULL;   // creado Arbol
+      // creado Arbol
     bool invalida = false;
     int opc,sw; //almacena la opcion del menu
     char x[30] ,y[30],Opc[5],z[30] ; // palabra a insertar en un nodo

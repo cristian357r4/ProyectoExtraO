@@ -6,6 +6,12 @@
 #include <string>
 #include <unistd.h>
 
+typedef struct item {
+    int clave;
+    int posicion;
+    struct item *left;
+    struct item *right;
+} *Item;
 typedef struct Curso {
     int codigo;
     char nombre[20];
@@ -15,10 +21,22 @@ typedef struct Curso {
     int duracion;
     int no_asistentes;
     int costo;
+} cursos;
 
-} curso;
+typedef struct Participantes {
+    int claveParticipante;
+    char nombre[20];
+    char nacionalidad[30];
+    char domicilio[50];
+    int codigo_postal;
+    char correo_elec[30];
+    int telefono;
+
+} participantes;
+
 
 typedef struct Instructor {
+    int claveInstructor;
     char nombre[20];
     char nacionalidad[30];
     char domicilio[50];
@@ -27,39 +45,40 @@ typedef struct Instructor {
     char curp[20];
     char correo[30];
     int telefono;
-
-} instructor;
+} instructores;
 
 void menuPrincipal();
-
 void menucursos();
-
 void menuInstructor();
-
 void menuParticipantes();
-
-curso Curso_Altas();
-
+cursos Curso_Altas();
 bool EsUnNumero(const char *);
-
 bool validar_Duracion(int);
-
 bool validarFecha(char [15]);
-
 void mostrarCurso();
-
 bool escribir_bitacora(double, char [25]);
+bool guardarCurso(cursos);
+bool verificar_clave_Unica(int);
+void AddNode(int, Item &, int);
+void cargar_Participantes_Arbol();
+void cargar_Instuctores_Arbol();
+void cargar_Cursos_Arbol();
+void Arbol_mostrar(Item &);
 
-bool guardarCurso(curso);
+cursos curso;
+instructores instructor;
+participantes participante;
+FILE *Cursos_Escritura_archivo, *Cursos_Lectura_archivo,
+        *Instructor_Escritura_archivo, *Instructor_Lectura_archivo,
+        *Participante_Escritura_archivo, *Participante_Lectura_archivo;
+char nombre_archivo_cursos[] = "Cursos.dat", nombre_archivo_instructor[] = "Instructor.dat",
+        nombre_archivo_participante[] = "Participante.dat";
 
-bool verificar_clave_Unica(int );
-
-curso curso1;
-FILE *Escritura_archivo_Cursos, *Lectura_archivo_Cursos;
-char nombre_archivo_cursos[] = "Cursos.dat";
+Item Arbol_Cursos = NULL, Arbol_Participantes = NULL, Arbol_Instructores = NULL;
 
 int main() {
 
+    std::cout << "Datos guardados en el arbol\n";
     char local_date[25];
     double time_lapse_seconds;
     /*bool (*write_bitacora)(double,char [25]);
@@ -75,7 +94,6 @@ int main() {
 ////bloque de tiempo de ejecucion
     menuPrincipal();
     getchar();
-
 ////////////////////////////////final de la ejecucion guarda los datos en la bitacora//////////////////////////////
     time(&segundostranscurridos);
     time_lapse_seconds = difftime(segundostranscurridos, rawtime);
@@ -83,15 +101,13 @@ int main() {
     escribir_bitacora(time_lapse_seconds, local_date);//funcion llamada de la libreria
     printf("segundos transcurridos: %.3f\n", time_lapse_seconds);
     printf("char time : %s\n", local_date);
-
     return 0;
 }
+
 /////////////////////MENUS /////////////////////////////
-
 void menuPrincipal() {
-    //menu principal
-
-
+    cargar_Cursos_Arbol();
+    Arbol_mostrar(Arbol_Cursos);
     int op;
     do {
         fflush(stdin);
@@ -166,13 +182,13 @@ void menucursos() {//menu de cursos
         scanf("%d", &opcd);
         switch (opcd) {
             case 1:
-                curso1 = Curso_Altas();
-                if(!guardarCurso(curso1)){
+                curso = Curso_Altas();
+                if (!guardarCurso(curso)) {
                     printf("Error al escribir el archivo!!!\n");
 
                 }
                 fflush(stdin);
-                std::cin.ignore(254,'\n');
+                //std::cin.ignore(254, '\n');
                 getchar();
                 //alta_curso();//Hacer llamado al modulo de altas de cursos
                 //getch();
@@ -192,7 +208,6 @@ void menucursos() {//menu de cursos
             case 5:
                 //consu_GG();//hacer llamado al modulo para consultar alumnos por curso
                 break;
-
             default:
                 system("cls");
                 printf("\n\n\n\t\t Opcion erronea\n\n");
@@ -232,9 +247,7 @@ void menuInstructor() {//menu de los instructores
             case 4:
                 //ejemplar1();//Hacer el llamado al menu para asignar nuevos cursos
                 break;
-            case 5:
-                menuPrincipal();//llamado al menu principal
-                break;
+
             default:
                 system("cls");
                 printf("\n\n\n\t\t Opcion erronea\n\n");
@@ -274,9 +287,6 @@ void menuParticipantes() {//menu de los instructores
             case 4:
                 //ejemplar1();//Hacer el llamado al menu para asignar nuevos cursos
                 break;
-            case 5:
-                menuPrincipal();//llamado al menu principal
-                break;
             default:
                 system("cls");
                 printf("\n\n\n\t\t Opcion erronea\n\n");
@@ -287,13 +297,13 @@ void menuParticipantes() {//menu de los instructores
 ////////////////FIN MENUS ////////////////////////////
 
 ////////////////////cursos///////////////////////////
-curso Curso_Altas() {
-    curso Curso_impartido;
+cursos Curso_Altas() {
+    cursos Curso_impartido;
     char temp_fecha[15], temp_duracion[15], temporal_codigo[15], temporal_costo[15];
     int temp_int_duracion;
     bool temp_validar_Clave;
     std::cin.ignore(256, '\n');
-    do{
+    do {
         do {
             printf("Codigo del Curso: ");
             std::cin.getline(temporal_codigo, 15, '\n');
@@ -303,25 +313,21 @@ curso Curso_Altas() {
         } while (!EsUnNumero(temporal_codigo));
         Curso_impartido.codigo = atoi(temporal_codigo);
         temp_validar_Clave = verificar_clave_Unica(Curso_impartido.codigo);
-    }while(temp_validar_Clave == true);//validar si el codigo ya se encuentra regitrado
-
-    //buscar el codigo para aceparlo
+    } while (temp_validar_Clave == true);//validar si el codigo ya se encuentra regitrado
     printf("Nombre del Curso: ");
     std::cin.getline(Curso_impartido.nombre, 20, '\n');
     printf("Descripcion: ");
     std::cin.getline(Curso_impartido.descripcion, 100, '\n');
     printf("Idioma: ");
     std::cin.getline(Curso_impartido.idioma, 20, '\n');
-
     do {
         printf("Ingresa la fecha con el formato M-D-YYYY o MM-DD-YYYY: ");
         std::cin.getline(temp_fecha, 15, '\n');
     } while (!validarFecha(temp_fecha));//si la fecha se introdujo en el formato especifico avanza y devuelve true
     strcpy(Curso_impartido.ultima_fecha, temp_fecha);
-
     do {
         do {
-            std::cout << "\nDuracion en dias [1-5]: ";
+            std::cout << "Duracion en dias [1-5]: ";
             std::cin.getline(temp_duracion, 15, '\n');
             if (!EsUnNumero(temp_duracion)) {
                 printf("Ingresa un numero!!\n");
@@ -340,37 +346,36 @@ curso Curso_Altas() {
     Curso_impartido.costo = atoi(temporal_costo);
     printf("Guardando registro\n");
     for (int (i) = 0; (i) < 50; (i)++) {
-
         printf("%s", ".");
         fflush(stdout);
         usleep(100000);
     }
     printf("\n");
-
     return Curso_impartido;
 }
 
 void mostrarCurso() {
-    curso cursos_disponibles;
-    Lectura_archivo_Cursos = fopen(nombre_archivo_cursos,"rb");
-    if (Lectura_archivo_Cursos){
-        fread(&cursos_disponibles, sizeof(curso),1,Lectura_archivo_Cursos);
-        while (!feof(Lectura_archivo_Cursos)){
+    cursos cursos_disponibles;
+    Cursos_Lectura_archivo = fopen(nombre_archivo_cursos, "rb");
+    if (Cursos_Lectura_archivo) {
+        fread(&cursos_disponibles, sizeof(cursos), 1, Cursos_Lectura_archivo);
+        while (!feof(Cursos_Lectura_archivo)) {
             //printf(bitacoraEjecucion, "%7.2f\t%45s", tiempo_segundos, fecha);
-            printf("Codigo : %d\n",cursos_disponibles.codigo);
-            printf("Nombre: %s\n",cursos_disponibles.nombre);
-            printf("Descripcion: %s\n",cursos_disponibles.descripcion);
-            printf("Idioma: %s\n",cursos_disponibles.idioma);
-            printf("Ultima Fecha: %s\n",cursos_disponibles.ultima_fecha);
-            printf("Duracion(dias): %d\n",cursos_disponibles.duracion);
-            printf("Numero Asistentes: %d\n",cursos_disponibles.no_asistentes);
-            printf("Costo : $ %d \n",cursos_disponibles.costo);
-            fread(&cursos_disponibles, sizeof(curso),1,Lectura_archivo_Cursos);
+            printf("--------------------------------------------\n");
+            printf("Codigo : %d\n", cursos_disponibles.codigo);
+            printf("Nombre: %s\n", cursos_disponibles.nombre);
+            printf("Descripcion: %s\n", cursos_disponibles.descripcion);
+            printf("Idioma: %s\n", cursos_disponibles.idioma);
+            printf("Ultima Fecha: %s\n", cursos_disponibles.ultima_fecha);
+            printf("Duracion(dias): %d\n", cursos_disponibles.duracion);
+            printf("Numero Asistentes: %d\n", cursos_disponibles.no_asistentes);
+            printf("Costo : $ %d \n", cursos_disponibles.costo);
+            printf("--------------------------------------------\n");
+            fread(&cursos_disponibles, sizeof(cursos), 1, Cursos_Lectura_archivo);
         }
     }
     printf("Saliendo\n");
     for (int (i) = 0; (i) < 50; (i)++) {
-
         printf("%s", ".");
         fflush(stdout);
         usleep(100000);
@@ -383,9 +388,7 @@ bool validarFecha(char temp_fecha[15]) {
     bool resultado = false;
     if (std::regex_match(temp_fecha,
                          std::regex("^(0?[1-9]|1[0-2])[\\-](0?[1-9]|[12]\\d|3[01])[\\-](19|20)\\d{2}$"))) {
-        //fecha aceptada
-        resultado = true;
-
+        resultado = true;//fecha aceptada
     } else {
         std::cout << "\nfecha incorrecta\n";
         //mantiene el valor de bandera para pedir nuevamente la fecha
@@ -401,7 +404,6 @@ bool validar_Duracion(int duracion) {
     return resultado;
 }
 
-
 bool EsUnNumero(const char *cadena) {
     bool respuesta = false;
     for (; *cadena; ++cadena) {
@@ -409,44 +411,41 @@ bool EsUnNumero(const char *cadena) {
         if (std::isdigit(*cadena))
             respuesta = true;
     }
-
     return respuesta;
 }
 
-bool guardarCurso(curso cursoActual) {
-    Escritura_archivo_Cursos = fopen(nombre_archivo_cursos, "ab+");
-    bool guardado= false;
-    if (Escritura_archivo_Cursos) {
-        fwrite(&cursoActual, sizeof(curso), 1, Escritura_archivo_Cursos);
+bool guardarCurso(cursos cursoActual) {
+    Cursos_Escritura_archivo = fopen(nombre_archivo_cursos, "ab+");
+    bool guardado = false;
+    if (Cursos_Escritura_archivo) {
+        fwrite(&cursoActual, sizeof(cursos), 1, Cursos_Escritura_archivo);
         guardado = true;
     } else {
         printf("Error al guardar registro!!!\n");
     }
-    fclose(Escritura_archivo_Cursos);
+    fclose(Cursos_Escritura_archivo);
     return guardado;
 }
+
 //verificaClave(cursoActual.codigo)
-bool verificar_clave_Unica(int clave){
-    curso AuxiliarCursos;
-    bool registro_repetido= false;
-    Lectura_archivo_Cursos = fopen(nombre_archivo_cursos,"rb");
-    if(Lectura_archivo_Cursos){
-        fread(&AuxiliarCursos,sizeof(curso),1,Lectura_archivo_Cursos);
-        while(!feof(Lectura_archivo_Cursos)){
-            if(clave == AuxiliarCursos.codigo){
+bool verificar_clave_Unica(int clave) {
+    cursos AuxiliarCursos;
+    bool registro_repetido = false;
+    Cursos_Lectura_archivo = fopen(nombre_archivo_cursos, "rb");
+    if (Cursos_Lectura_archivo) {
+        fread(&AuxiliarCursos, sizeof(cursos), 1, Cursos_Lectura_archivo);
+        while (!feof(Cursos_Lectura_archivo)) {
+            if (clave == AuxiliarCursos.codigo) {
                 registro_repetido = true;
                 break;
             }
-            fread(&AuxiliarCursos,sizeof(curso),1,Lectura_archivo_Cursos);
+            fread(&AuxiliarCursos, sizeof(cursos), 1, Cursos_Lectura_archivo);
         }
-        fclose(Lectura_archivo_Cursos);
+        fclose(Cursos_Lectura_archivo);
     }
-
-return registro_repetido;
+    return registro_repetido;
 }
 ///////////////////fin cursos ///////////////////////
-
-
 
 //////////////////////BITACORA//////////////////////
 bool escribir_bitacora(double tiempo_segundos, char fecha[25]) {
@@ -458,9 +457,99 @@ bool escribir_bitacora(double tiempo_segundos, char fecha[25]) {
         fclose(bitacoraEjecucion);
     } else {
         estadoApertura = false;
-
     }
-
     return estadoApertura;
 }
 ////////////////////////////////////////////////////
+
+/////////////////FUNCIONES DEL ARBOL/////////////////
+
+/////////////////AGREGA NODO AL ARBOL O LO CREA///////
+//se puede usar en la funcion guardar Curso, participante, tutor Item & cambia dependiendo del arbol
+// node con el que se trabaja en el momento
+//unicamente contando el numero de cursos
+void AddNode(int clave, Item &node, int posicion) {
+    //la posicion debe hacerse contanto todos los registros de el archivo
+    //debes agregar el nodo al arbol no hay campos vacios
+    //bool agredado = false;
+    if (node == NULL) {
+        node = new (struct item);
+        node->clave = clave;
+        node->posicion = posicion;
+        node->left = node->right = NULL;
+        //agredado = true;
+    } else {
+        //como no hay posiciones vacias se agrega normalmente la comprobacion se hizo
+        //de manera externa
+        if (clave < node->clave) {
+            AddNode(clave, node->left, posicion);
+        } else if (clave > node->clave) {
+            AddNode(clave, node->right, posicion);
+        }
+        // no necesario ya que no hay calves iguales
+        /*else {
+            AddNode(clave + 1, node->right, posicion);
+        }*/
+    }
+}
+
+//debera agregar solo un elemento asi podemos llamar tambien en la funcion
+//de agregacion individual del registro, y se usara varias veces con el archivo osea en un ciclo
+void cargar_Cursos_Arbol() {
+    cursos auxiliar_curso;
+    Cursos_Lectura_archivo = fopen(nombre_archivo_cursos, "rb");
+    int posicion_Registro = 0;
+    if (Cursos_Lectura_archivo) {
+        std::cout <<"abrio bien el archivo de Cursos \n";
+        fread(&auxiliar_curso, sizeof(cursos), 1, Cursos_Lectura_archivo);
+        while (!feof(Cursos_Lectura_archivo)) {
+            std::cout <<"codigo: "<<auxiliar_curso.codigo <<"- posicion:"<<posicion_Registro<<std::endl;
+            AddNode(auxiliar_curso.codigo, Arbol_Cursos, posicion_Registro);
+            fread(&auxiliar_curso, sizeof(cursos), 1, Cursos_Lectura_archivo);
+            posicion_Registro++;
+        }
+        std::cout << "funcion de cargar datos en arbol\n";
+        std::cout << Arbol_Cursos << std::endl;
+        getchar();
+        fclose(Cursos_Lectura_archivo);
+    }
+}
+
+void cargar_Instuctores_Arbol() {
+    instructores auxiliar_instructor;
+    Instructor_Lectura_archivo = fopen(nombre_archivo_instructor, "rb");
+    int posicion_Registro = 0;
+    if (Instructor_Lectura_archivo) {
+        fread(&auxiliar_instructor, sizeof(instructores), 1, Instructor_Lectura_archivo);
+        while (feof(Instructor_Lectura_archivo)) {
+            AddNode(auxiliar_instructor.claveInstructor, Arbol_Instructores, posicion_Registro);
+            fread(&auxiliar_instructor, sizeof(instructores), 1, Instructor_Lectura_archivo);
+            posicion_Registro++;
+        }
+        fclose(Instructor_Lectura_archivo);
+    }
+}
+void cargar_Participantes_Arbol() {
+    participantes auxiliar_participantes;
+    Participante_Lectura_archivo = fopen(nombre_archivo_participante, "rb");
+    int posicion_Registro = 0;
+    if (Participante_Lectura_archivo) {
+        fread(&auxiliar_participantes, sizeof(participantes), 1, Participante_Lectura_archivo);
+        while (feof(Instructor_Lectura_archivo)) {
+            AddNode(auxiliar_participantes.claveParticipante, Arbol_Participantes, posicion_Registro);
+            fread(&auxiliar_participantes, sizeof(participantes), 1, Participante_Lectura_archivo);
+            posicion_Registro++;
+        }
+        fclose(Participante_Lectura_archivo);
+    }
+}
+void Arbol_mostrar(Item &Arbol){
+    if (Arbol->left) {
+        Arbol_mostrar(Arbol->left);
+    }
+    printf("clave [%d] - posicion [%d]", Arbol->clave, Arbol->posicion);
+    if (Arbol->right) {
+        Arbol_mostrar(Arbol->right);
+    }
+}
+////////////////////FINAL DE FUNCIONES DE ARBOL////////////////////

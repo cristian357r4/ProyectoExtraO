@@ -4,7 +4,8 @@ from the text file sorted from the smallest to the largest.
 task_02.06.2010 */
 #include <stdio.h>
 #include <stdlib.h>
-#include "libs/Cursos.h"
+#include <iostream>
+
 
 // Structure for a tree node
 typedef struct item {
@@ -12,7 +13,7 @@ typedef struct item {
     int posicion;
     struct item *left;
     struct item *right;
-} Item;
+} *Item;
 struct
 {
     int codigo;
@@ -27,22 +28,35 @@ struct
 }Curso;
 
 
-void AddNode(int data, Item **node, int posicion);
+bool AddNode(int , Item &, int );
 int Cliente_Agregar();
-void LeftOrder(Item *node);
-
+void LeftOrder(Item &node);
+Item root = NULL;//crea la raiz del arbol y le asuga null
 int main() {
 
     char buffer[128];
     int i;
-    Item *root = NULL; // root of tree
+
     FILE *fp = fopen("ex52.txt", "r");
-    if (!fp) exit(1); // exit if the file opening is failed
+    if (!fp) {
+        std::cout << "no hay datos\n";
+        exit(1);
+    }//exit(1); // exit if the file opening is failed
+
+
+
     // reading values from the file
-    int contador = 0;
+    int posiciondentro_del_dato_en_archivo = 0;
+    int numeros_negativo = 0;
+
     while (fgets(buffer, 128, fp) != NULL) {
-        AddNode(atoi(buffer), &root, contador); // adding nodes to the tree
-        contador++;
+        if(AddNode(atoi(buffer), root, posiciondentro_del_dato_en_archivo)){
+            printf("Nodo [%d] agregado con valor [%d]\n",posiciondentro_del_dato_en_archivo,atoi(buffer));
+            posiciondentro_del_dato_en_archivo++;
+        }else{
+            printf("-1 encontrado en la posicion [%d]\n", numeros_negativo);
+        }
+        numeros_negativo++;
     }
 
     fclose(fp);
@@ -64,27 +78,32 @@ int main() {
 
 //funcion inserta los nuevos nodos con la informacion
 //buscar dar la posicion tambien la posicion esta desfasada debio a que no acepta el menos 1
-void AddNode(int clave, Item **node, int posicion) {
-    if (*node == NULL) {
-        *node = (Item *) calloc(1, sizeof(Item));
-        (*node)->clave = clave;
-        (*node)->posicion = posicion;
-        (*node)->left = (*node)->right = NULL;
+bool AddNode(int clave, Item &node, int posicion) {
+     bool agregdo = true;
+    if (node == NULL) {
+        node = new (struct item);
+        node->clave = clave;
+        node->posicion = posicion;
+        node->left = node->right = NULL;
+
     } else {
         if (clave != -1) {
-            if (clave < (*node)->clave) {
-                AddNode(clave, &(*node)->left, posicion);
-            } else if (clave > (*node)->clave) {
-                AddNode(clave, &(*node)->right, posicion);
+            if (clave < node->clave) {
+                AddNode(clave, node->left, posicion);
+            } else if (clave > node->clave) {
+                AddNode(clave, node->right, posicion);
             } else {
-                AddNode(clave+1,&(*node)->right,posicion);
+                AddNode(clave+1,node->right,posicion);
             }
+        }else {
+            agregdo = false;
         }
     }
+    return agregdo;
 }
 
 // Bypassing the tree on the left (in ascending order)
-void LeftOrder(Item *node) {
+void LeftOrder(Item &node) {
     if (node->left) {
         LeftOrder(node->left);
 
